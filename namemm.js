@@ -25,8 +25,6 @@ function combineAndFormat(mmWords) {
 
 function mmToEn(name) {
     var syllables = splitIntoSyllables(name);
-    syllables.shift();
-    console.log(syllables);
     var enWords = convertSyllablesToEnglish(syllables);
     return combineAndFormat(enWords);
 }
@@ -36,6 +34,9 @@ function splitIntoSyllables(name) {
 }
 
 function convertSyllablesToEnglish(syllables) {
+
+    syllables.shift(); //first room is empty. need to clear it
+
     let enWords = [];
     let right = syllables.length;
     let left = 0;
