@@ -1,19 +1,26 @@
-function isMyanmarUnicode(s) {
+function testMyanmarUnicode(s) {
     let regex = /^[\u1000-\u109F]*$/;
     return regex.test(s);
 }
 
 function convert() {
-    const name = document.getElementById('name').value;
-    let result = "";
-    if(isMyanmarUnicode(name)) {
-        result = mmToEn(name);
+    const name = getInputValue('name');
+    let result = determineConversion(name);
+    setOutputValue('result', result);
+}
 
-    }
-    else {
-        result = enToMy(name);
-    }
+function getInputValue(id) {
+    return document.getElementById(id).value;
+}
 
-    document.getElementById('result').innerHTML = result;
-    
+function determineConversion(name) {
+    if(testMyanmarUnicode(name)) {
+        return mmToEn(name);
+    } else {
+        return enToMy(name);
+    }
+}
+
+function setOutputValue(id, value) {
+    document.getElementById(id).innerHTML = value;
 }
