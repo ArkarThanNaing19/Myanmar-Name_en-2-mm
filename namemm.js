@@ -7,7 +7,7 @@ function enToMy(name) {
 
     var words = wordBreak(name);
     var mmWords = findWords(words);
-    
+    all = [];
     combine(mmWords, 0, [], all);
     return all.join('<br/>');
 }
