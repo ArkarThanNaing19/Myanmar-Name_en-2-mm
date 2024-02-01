@@ -5,23 +5,25 @@ const dict: { [key: string]: [string] } = {};
 const myDict: { [key: string]: [string] } = {};
 
 fs.createReadStream('MyanmarName-en-mm.csv')
-  .pipe(csv())
-  .on('data', (row) => {
-    if(dict[row['အင်္ဂလိပ်']] == undefined) {
-        dict[row['အင်္ဂလိပ်']] = [row['Myanmar']];
+    .pipe(csv())
+    .on('data', (row) => {
+        updateDict(dict, row['အင်္ဂလိပ်'], row['Myanmar']);
+        updateDict(myDict, row['Myanmar'], row['အင်္ဂလိပ်']);
+    })
+    .on('end', () => {
+        writeToFile('en-mm.json', dict);
+        writeToFile('mm-en.json', myDict);
+    });
+
+function updateDict(dictionary: { [key: string]: [string] }, key: string, value: string) {
+    if(dictionary[key] == undefined) {
+        dictionary[key] = [value];
     } 
     else {
-        dict[row['အင်္ဂလိပ်']].push(row['Myanmar']);
+        dictionary[key].push(value);
     }
-    if(myDict[row['Myanmar']] == undefined) {
-        myDict[row['Myanmar']] = [row['အင်္ဂလိပ်']];
-    }
-    else {
-        myDict[row['Myanmar']].push(row['အင်္ဂလိပ်']);
-    }
-  })
-  .on('end', () => {
-    //console.log(JSON.stringify(dict));
-    fs.writeFileSync('en-mm.json', JSON.stringify(dict));
-    fs.writeFileSync('mm-en.json', JSON.stringify(myDict));
-  });
+}
+
+function writeToFile(filename: string, data: Object) {
+    fs.writeFileSync(filename, JSON.stringify(data));
+}
