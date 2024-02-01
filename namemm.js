@@ -25,7 +25,6 @@ function combineAndFormat(mmWords) {
 
 function mmToEn(name) {
     var syllables = splitIntoSyllables(name);
-    console.log(syllables);
     var enWords = convertSyllablesToEnglish(syllables);
     return combineAndFormat(enWords);
 }
