@@ -12,6 +12,8 @@ const ngaThat = "\u1004\u103a";
 
 const aThat = "\u103a";
 
+
+
 // Regular expression pattern for Myanmar syllable breaking
 // *** a consonant not after a subscript symbol AND a consonant is not
 // followed by a-That character or a subscript symbol
@@ -30,7 +32,21 @@ function segmentWithSeparator(text, separator) {
 	if (separator === undefined) {
 		separator = "|";
 	}
-	var result = text.replace(BREAK_PATTERN, separator + "$1");
+	var test = text.replaceAll("\u1039","𝕊");
+	
+	var result = test.replace(BREAK_PATTERN, separator + "$1");
     result = result.replace("\u{1039}","\u{103A}");
-    return result;
+
+	//ugly code, only for this , not correct syllable breaking rule
+	let arr = result.split(separator);
+	
+	for (let i = 0; i < arr.length; i++) {
+		if (arr[i].endsWith('𝕊')) {
+			arr[i] = arr[i].replace('𝕊', "\u1039") + arr[i + 1];
+			arr.splice(i + 1, 1);
+		}
+	}
+	
+
+    return arr.join(separator);
 }
