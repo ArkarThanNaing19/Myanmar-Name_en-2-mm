@@ -25,6 +25,8 @@ function combineAndFormat(mmWords) {
 
 function mmToEn(name) {
     var syllables = splitIntoSyllables(name);
+    syllables.shift();
+    console.log(syllables);
     var enWords = convertSyllablesToEnglish(syllables);
     return combineAndFormat(enWords);
 }
@@ -39,14 +41,16 @@ function convertSyllablesToEnglish(syllables) {
     let left = 0;
 
     while (right > left) {
-        let slice = syllables.slice(left + 1, right).join('');
+        let slice = syllables.slice(left, right).join('');
+        console.log(slice);
         if(slice == "") break;
         const result = mmEN[slice];
+        
         if (result == undefined) {
             right--;
         } else {
             enWords.push(result);
-            left++;
+            left = right;
             right = syllables.length;
         }
     }
