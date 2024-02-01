@@ -4,70 +4,54 @@ const mmEN = {"- ":["-"],"(ခ) ":["-A-","(AKA)","@"],"":["."],"၀":["0"],"၁"
 let all = [];
 
 function enToMy(name) {
+    var words = splitIntoWords(name);
+    var mmWords = convertWordsToMyanmar(words);
+    return combineAndFormat(mmWords);
+}
 
-    var words = wordBreak(name);
-    var mmWords = findWords(words);
+function splitIntoWords(name) {
+    return name.split(' ');
+}
+
+function convertWordsToMyanmar(words) {
+    return words.map(word => enMM[word.toUpperCase()]);
+}
+
+function combineAndFormat(mmWords) {
     all = [];
     combine(mmWords, 0, [], all);
     return all.join('<br/>');
 }
 
-
-
-function wordBreak(name) {
-    return name.split(' ');
-}
-
-function findWords(words) {
-    var mmWords = [];
-    for (var i = 0; i < words.length; i++) {
-        mmWords.push(enMM[words[i].toUpperCase()]);
-    }
-    return mmWords;
-}
-
-
 function mmToEn(name) {
-    var syllable = mmSyllableBreak(name);
-    var enWords = findEnglishWords(syllable);
-    all = [];
-    combine(enWords, 0, [], all);
-    return all.join('<br/>');
+    var syllables = splitIntoSyllables(name);
+    var enWords = convertSyllablesToEnglish(syllables);
+    return combineAndFormat(enWords);
 }
 
-function mmSyllableBreak(name) {
+function splitIntoSyllables(name) {
     return segmentWithSeparator(name," ").split(" ");
 }
 
-function findEnglishWords(syllable) {
-
-    let endWords = [];
-    let right = syllable.length;
-    let left = 0
+function convertSyllablesToEnglish(syllables) {
+    let enWords = [];
+    let right = syllables.length;
+    let left = 0;
 
     while (right > left) {
-    let slice = syllable.slice(left + 1, right).join('');
-    
-        if(slice == "") {
-            break;
-        }
+        let slice = syllables.slice(left + 1, right).join('');
+        if(slice == "") break;
         const result = mmEN[slice];
-        if ( result == undefined) {
+        if (result == undefined) {
             right--;
-        }
-        else {
-            
-            endWords.push(result);
+        } else {
+            enWords.push(result);
             left++;
-            right = syllable.length;
+            right = syllables.length;
         }
-        
     }
-    console.log(endWords);
-    return endWords;
-   
+    return enWords;
 }
-
 
 function combine(arr, index, current, all) {
     if (index === arr.length) {
@@ -79,6 +63,5 @@ function combine(arr, index, current, all) {
         combine(arr, index + 1, [...current, arr[index][i]], all);
     }
 }
-
 
 
